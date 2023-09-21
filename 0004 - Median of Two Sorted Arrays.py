@@ -26,24 +26,37 @@
 # -106 <= nums1[i], nums2[i] <= 106
 
 
-class Solution(object):
-    def findMedianSortedArrays(self, nums1, nums2):
-        """
-        :type nums1: List[int]
-        :type nums2: List[int]
-        :rtype: float
-        """
-        output_list = []
-        while(nums1 and nums2):
-            if nums1[0] <= nums2[0]:
-                output_list.append(nums1.pop(0))
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+        
+        m, n = len(nums1), len(nums2)
+        low, high = 0, m
+        
+        while low <= high:
+            partitionX = (low + high) // 2
+            partitionY = (m + n + 1) // 2 - partitionX
+            
+            maxX = float('-inf') if partitionX == 0 else nums1[partitionX - 1]
+            maxY = float('-inf') if partitionY == 0 else nums2[partitionY - 1]
+            minX = float('inf') if partitionX == m else nums1[partitionX]
+            minY = float('inf') if partitionY == n else nums2[partitionY]
+            
+            if maxX <= minY and maxY <= minX:
+                if (m + n) % 2 == 0:
+                    return (max(maxX, maxY) + min(minX, minY)) / 2
+                else:
+                    return max(maxX, maxY)
+            elif maxX > minY:
+                high = partitionX - 1
             else:
-                output_list.append(nums2.pop(0))
-        while nums1:
-            output_list.append(nums1.pop(0))
-        while nums2:
-            output_list.append(nums2.pop(0))
-        mid = len(output_list)//2
-        if len(output_list)%2 != 0:
-            return(output_list[mid])
-        return(float(output_list[mid] + output_list[mid-1])/2)
+                low = partitionX + 1
+
+
+
+
+
+
+
+
