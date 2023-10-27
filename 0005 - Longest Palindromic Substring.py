@@ -17,27 +17,42 @@
 # s consist of only digits and English letters.
 
 
-class Solution(object):
-    def longestPalindrome(self, s):
-        """
-        :type s: str
-        :rtype: str
-        """
-        longest = ""
-    
-        def expand_around_center(s, left, right):
-            while left >= 0 and right < len(s) and s[left] == s[right]:
-                left -= 1
-                right += 1
-            return s[left + 1:right]
-        
+
+
+
+
+
+
+
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if not s:
+            return ""
+
+        longest_palindrome_indices = [0, 0]
+
+        def expand_around_center(s, i, j):
+            while i >= 0 and j < len(s) and s[i] == s[j]:
+                i -= 1
+                j += 1
+            return [i + 1, j - 1]
+
         for i in range(len(s)):
-            palindrome1 = expand_around_center(s, i, i)
-            if len(palindrome1) > len(longest):
-                longest = palindrome1
-                
-            palindrome2 = expand_around_center(s, i, i + 1)
-            if len(palindrome2) > len(longest):
-                longest = palindrome2
-                    
-        return longest
+            current_indices = expand_around_center(s, i, i)
+            if current_indices[1] - current_indices[0] > longest_palindrome_indices[1] - longest_palindrome_indices[0]:
+                longest_palindrome_indices = current_indices
+            if i + 1 < len(s) and s[i] == s[i + 1]:
+                even_indices = expand_around_center(s, i, i + 1)
+                if even_indices[1] - even_indices[0] > longest_palindrome_indices[1] - longest_palindrome_indices[0]:
+                    longest_palindrome_indices = even_indices
+
+        return s[longest_palindrome_indices[0]:longest_palindrome_indices[1] + 1]
+
+
+
+
+
+
+
+
+
